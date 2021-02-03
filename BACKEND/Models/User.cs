@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json.Serialization;
 
 namespace BACKEND.Models
 {
@@ -14,6 +14,7 @@ namespace BACKEND.Models
         public string username { get; set; }
 
         [Required]
+        //[JsonIgnore]
         [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", ErrorMessage = "Password must be between 4 and 8 digits long and include at least one numeric digit.")]
         public string password { get; set; }
 
@@ -23,12 +24,12 @@ namespace BACKEND.Models
        
         [Required]
         [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage ="Username incorrect format.")]
-        public string? email  { get; set; }
+        public string email  { get; set; }
 
         [MaxLength(15)]
         [Required]
         [RegularExpression("^\\d{10}$|^\\d{11}$", ErrorMessage = "Phone incorrect format.")]
-        public string? phone { get; set; }
+        public string phone { get; set; }        
 
     }
 }

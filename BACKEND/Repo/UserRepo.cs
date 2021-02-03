@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using BACKEND.Data;
 using Microsoft.Extensions.Caching.Memory;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using OAuth2;
 
 namespace BACKEND.Repo
 {
@@ -11,12 +17,16 @@ namespace BACKEND.Repo
     {
         private DBContext db;
         private readonly IMemoryCache _memoryCache;
+        
         public UserRepo(DBContext dbContext, IMemoryCache memoryCache)
         {
             db = dbContext;
+            _memoryCache = memoryCache;
+
         }
 
         public UserRepo() { }
+
         //get list
         public List<User> getAllUser()
         {
@@ -38,21 +48,23 @@ namespace BACKEND.Repo
             {
                 db.Users.Update(edituser);
                 edituser.fullname = user.fullname;
-                edituser.email = user.email;
-                edituser.username = user.username;
+                edituser.email = user.email;                
                 edituser.password = user.password;
                 edituser.phone = user.phone;
                 db.SaveChanges();
             }
             return user;
         }
+
         //create
         public User PostUser(User user)
-        {
+        {           
             db.Add(user);
             db.SaveChanges();
             return user;
         }
+
+
         //delete
         public void DeleteUser(User user)
         {
@@ -61,17 +73,55 @@ namespace BACKEND.Repo
         }
 
 
-
-
-
-        /*private User AuthenticateUser(string username, string password)
+        //login
+        public String Login(string username, string password)
         {
-            var user = db.Users.SingleOrDefault(x => x.username == username && x.password == password);
-            if (user == null)
+            List<User> list = db.Users.ToList();
+
+            if (list != null)
             {
-                return null;
+                foreach (var user in list)
+                {
+                    if (user.username == username && user.password == password)
+                    {
+                       return GenerateJSONWebToken(user);
+                    }                                  
+                }               
             }
-            return user;
-        }*/
+            return "";
+        }
+
+        // generate Json
+        private String GenerateJSONWebToken(User user)
+        {
+            
+            // claims lay thong tin user 
+            var claims = new List<Claim>();            
+            claims.Add(new Claim("fullname", user.fullname));
+            claims.Add(new Claim("email", user.email));
+            claims.Add(new Claim("username", user.username));           
+            claims.Add(new Claim("phone", user.phone));
+            //claims.Add(new Claim("password", user.password));
+
+
+            var secretBytes = Encoding.UTF8.GetBytes(Constant.Secret);
+            var key = new SymmetricSecurityKey(secretBytes);
+            var algorthm = SecurityAlgorithms.HmacSha256;
+
+            var signingCredentials = new SigningCredentials(key, algorthm);
+            var token = new JwtSecurityToken(
+                Constant.Issuer,
+                Constant.Audiance,
+                claims,
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials);
+            var tokenJson = new JwtSecurityTokenHandler().WriteToken(token);
+                return tokenJson;            
+        }       
+
+
+
+
     }
 }
