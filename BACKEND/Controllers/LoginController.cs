@@ -14,10 +14,10 @@ namespace BACKEND.Controllers
     public class LoginController : ControllerBase
     {
         
-        private IUserService _iuser;
+        private IUserService userService;
         public LoginController(IUserService iuser)
-        {        
-            _iuser = iuser;
+        {
+            userService = iuser;
         }
 
         // login
@@ -25,7 +25,7 @@ namespace BACKEND.Controllers
         [Route("api/[controller]/Authenticate")]
         public IActionResult Authenticate(String username, String password)
         {                       
-            String token =  _iuser.Login(username, password);
+            String token = userService.Login(username, password);
             if(!token.Equals(""))
             {
                 return base.Content("Token: "+ token, "text/html", Encoding.UTF8);

@@ -58,7 +58,7 @@ namespace BACKEND.Repo
 
         //create
         public User PostUser(User user)
-        {           
+        {              
             db.Add(user);
             db.SaveChanges();
             return user;
@@ -95,7 +95,7 @@ namespace BACKEND.Repo
         private String GenerateJSONWebToken(User user)
         {
             
-            // claims lay thong tin user 
+            // claims thong tin user 
             var claims = new List<Claim>();            
             claims.Add(new Claim("fullname", user.fullname));
             claims.Add(new Claim("email", user.email));
@@ -103,11 +103,12 @@ namespace BACKEND.Repo
             claims.Add(new Claim("phone", user.phone));
             //claims.Add(new Claim("password", user.password));
 
-
+            //security key
             var secretBytes = Encoding.UTF8.GetBytes(Constant.Secret);
             var key = new SymmetricSecurityKey(secretBytes);
             var algorthm = SecurityAlgorithms.HmacSha256;
 
+            //signing credentials
             var signingCredentials = new SigningCredentials(key, algorthm);
             var token = new JwtSecurityToken(
                 Constant.Issuer,

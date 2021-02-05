@@ -59,3 +59,4 @@ D:\BACKEND\BACKEND\obj\Debug\netcoreapp3.1\BACKEND.dll
 D:\BACKEND\BACKEND\obj\Debug\netcoreapp3.1\BACKEND.pdb
 D:\BACKEND\BACKEND\obj\Debug\netcoreapp3.1\BACKEND.genruntimeconfig.cache
 D:\BACKEND\BACKEND\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\BACKEND\BACKEND\obj\Debug\netcoreapp3.1\BACKEND.csprojAssemblyReference.cache

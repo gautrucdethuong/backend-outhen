@@ -7,10 +7,15 @@ namespace BACKEND.Services
     {
         //service user
         List<User> getAllUser();
+
         User GetUser(int id);
+
         User PostUser(User user);
+
         User PatchUser(User user);
+
         void DeleteUser(User user);
+
         string Login(string username, string password);
 
 
